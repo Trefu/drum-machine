@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Display } from "./components/Display";
+import { Drumpads } from "./containers/DrumPads";
 
 function App() {
   const [on, setOn] = useState(true)
@@ -10,13 +12,18 @@ function App() {
     yellow: 'yellow-100'
 
   }
+
+
   return (
-    <div className={`bg-${colors.green} min-h-screen flex justify-center items-center `} >
-      <h1>buenas</h1>
-      <h1>buenas</h1>
-      <h1>buenas</h1>
-    </div>
-  );
+    <div id='drum-machine' className={`bg-${colors.green} min-h-screen flex justify-center items-center `} >
+      <Drumpads colors={colors} />
+
+
+      <Display colors={colors} />
+
+    </div >
+
+  )
 }
 
 export default App;
