@@ -1,10 +1,28 @@
+import { useEffect } from "react"
 
-export const DrumPad = ({ sound, colors }) => {
+export const DrumPad = ({ sound, colors, setActualSound }) => {
+
     const handleClick = (e) => {
-        const audio = document.getElementById(sound.keyTrigger)
-        console.log(audio)
+        const audio = document.getElementById(sound.keyTrigger);
+        setActualSound(sound.id)
         audio.play()
     }
+    const handleKeyDown = (e) => {
+        const audio = document.getElementById(sound.keyTrigger);
+        if (e.keyCode === sound.keyCode) {
+            audio.play();
+            setActualSound(sound.id);
+        }
+
+        return console.log('not coincidence');
+    }
+    useEffect(() => {
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            console.log('limpiando');
+            document.removeEventListener('keydown', handleKeyDown)
+        }
+    })
     return (
         <>
             {/*   //DRUMPAD ELEMENT */}

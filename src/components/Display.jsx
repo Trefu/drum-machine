@@ -1,7 +1,7 @@
-export const Display = ({ colors }) => {
+export const Display = ({ colors, actualSound = 'nothing' }) => {
     return (
         <div id='display' className={`bg-${colors.yellowStrong}`}>
-            display
+            {actualSound}
         </div>
     )
 }
