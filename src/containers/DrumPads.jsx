@@ -1,6 +1,6 @@
 import { DrumPad } from "../components/DrumPad"
 
-export const Drumpads = ({ setActualSound }) => {
+export const Drumpads = ({ volume, power, setActualSound }) => {
     const sounds = [
         {
             keyCode: 81,
@@ -61,7 +61,7 @@ export const Drumpads = ({ setActualSound }) => {
     return (
 
         <div className={`gap-3 mr-10  bg-gray-400 grid grid-cols-3`}>
-            {sounds.map((s, i) => <DrumPad key={i} sound={s} setActualSound={setActualSound} />)}
+            {sounds.map((s, i) => <DrumPad volume={volume} power={power} key={i} sound={s} setActualSound={setActualSound} />)}
 
         </div>
 
