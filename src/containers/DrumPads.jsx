@@ -60,7 +60,7 @@ export const Drumpads = ({ volume, power, setActualSound }) => {
 
     return (
 
-        <div className={`gap-3 mr-10  bg-gray-400 grid grid-cols-3`}>
+        <div className={`w-full gap-3 mr-10  bg-gray-400 grid grid-cols-3`}>
             {sounds.map((s, i) => <DrumPad volume={volume} power={power} key={i} sound={s} setActualSound={setActualSound} />)}
 
         </div>
