@@ -39,7 +39,7 @@ export const DrumPad = ({ volume, power, sound, setActualSound }) => {
     return (
         <>
             {/*   //DRUMPAD ELEMENT */}
-            <button onClick={handleClick} id={sound.id} className={`rounded-xl drum-pad bg-gray-700 p-10 font-bold text-xl text-green-600 active:text-green-400 shadow-2xl`}>
+            <button onClick={handleClick} id={sound.id} className={`rounded-xl drum-pad bg-gray-700 p-4 md:p-10 font-bold text-xl text-green-600 active:text-green-400 shadow-2xl`}>
                 {sound.keyTrigger}
                 <audio preload='auto' id={`${sound.keyTrigger}`} className='clip bg-red-300 w-1' src={`${sound.url}`}></audio>
             </button>
