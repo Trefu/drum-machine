@@ -5,7 +5,7 @@
 @layer base {
   html,
   body,
-  #root {
+  #app {
     height: 100%;
   }
   body {
@@ -13,6 +13,9 @@
       "Helvetica Neue", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     color-scheme: dark;
+    background-color: #020617;
+    color: #f8fafc;
+    margin: 0;
   }
 }
 
@@ -75,13 +78,4 @@
 
 .animate-lcd-flash {
   animation: lcd-flash 220ms ease-out;
-}
-
-@keyframes ambient-pulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 0.75; }
-}
-
-.animate-ambient {
-  animation: ambient-pulse 6s ease-in-out infinite;
 }

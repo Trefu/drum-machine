@@ -1,6 +1,6 @@
-module.exports = {
-  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
-  darkMode: false,
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./index.html', './src/**/*.{svelte,js,ts}'],
   theme: {
     extend: {
       fontFamily: {
@@ -17,11 +17,5 @@ module.exports = {
       },
     },
   },
-  variants: {
-    extend: {
-      textColor: ['active', 'disabled', 'group-hover'],
-      opacity: ['disabled'],
-    },
-  },
   plugins: [],
-}
+};
