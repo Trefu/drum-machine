@@ -489,7 +489,7 @@
 
       const cx = w / 2;
       const cy = h / 2;
-      const radius = Math.min(w, h) / 2 - 4;
+      const radius = Math.max(0.5, Math.min(w, h) / 2 - 4);
 
       ctx.save();
       ctx.beginPath();
