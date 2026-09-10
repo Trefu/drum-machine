@@ -36,6 +36,8 @@
           class:shadow-[0_0_12px_2px_rgba(34,211,238,0.85)]={power && bank.id === 'piano'}
           class:bg-rose-400={power && bank.id === 'perc'}
           class:shadow-[0_0_12px_2px_rgba(251,113,133,0.85)]={power && bank.id === 'perc'}
+          class:bg-violet-400={power && bank.id === 'fx'}
+          class:shadow-[0_0_12px_2px_rgba(167,139,250,0.85)]={power && bank.id === 'fx'}
         ></span>
         <h1 class="text-white font-extrabold tracking-[0.3em] text-sm md:text-base">
           TREFUDRUM

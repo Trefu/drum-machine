@@ -238,10 +238,217 @@
     }
   }
 
+  function playSynthFx(type) {
+    const ctx = getCtx();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const peak = Math.max(0.0001, volume);
+
+    switch (type) {
+      case 'boom': {
+        const osc = ctx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(120, now);
+        osc.frequency.exponentialRampToValueAtTime(30, now + 0.25);
+        const g = envGain(ctx, now, 0.003, 0.9, peak);
+        osc.connect(g).connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 1.0);
+
+        const noise = ctx.createBufferSource();
+        noise.buffer = makeNoiseBuffer(ctx, 0.4);
+        const lp = ctx.createBiquadFilter();
+        lp.type = 'lowpass';
+        lp.frequency.value = 400;
+        const ng = envGain(ctx, now, 0.005, 0.4, peak * 0.6);
+        noise.connect(lp).connect(ng).connect(ctx.destination);
+        noise.start(now);
+        noise.stop(now + 0.45);
+        break;
+      }
+      case 'sub': {
+        const osc = ctx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.value = 45;
+        const g = envGain(ctx, now, 0.01, 1.6, peak);
+        osc.connect(g).connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 1.7);
+
+        const sub = ctx.createOscillator();
+        sub.type = 'triangle';
+        sub.frequency.value = 22.5;
+        const sg = ctx.createGain();
+        sg.gain.value = peak * 0.5;
+        sub.connect(sg).connect(ctx.destination);
+        sub.start(now);
+        sub.stop(now + 1.7);
+        break;
+      }
+      case 'riser': {
+        const noise = ctx.createBufferSource();
+        noise.buffer = makeNoiseBuffer(ctx, 1.5);
+        const bp = ctx.createBiquadFilter();
+        bp.type = 'bandpass';
+        bp.frequency.setValueAtTime(200, now);
+        bp.frequency.exponentialRampToValueAtTime(8000, now + 1.2);
+        bp.Q.value = 4;
+        const g = ctx.createGain();
+        g.gain.setValueAtTime(0, now);
+        g.gain.linearRampToValueAtTime(peak * 0.7, now + 1.2);
+        noise.connect(bp).connect(g).connect(ctx.destination);
+        noise.start(now);
+        noise.stop(now + 1.5);
+        break;
+      }
+      case 'reverse': {
+        const noise = ctx.createBufferSource();
+        noise.buffer = makeNoiseBuffer(ctx, 1.2);
+        const hp = ctx.createBiquadFilter();
+        hp.type = 'highpass';
+        hp.frequency.setValueAtTime(200, now);
+        hp.frequency.exponentialRampToValueAtTime(8000, now + 1.0);
+        const g = ctx.createGain();
+        g.gain.setValueAtTime(0, now);
+        g.gain.linearRampToValueAtTime(peak * 0.6, now + 1.0);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
+        noise.connect(hp).connect(g).connect(ctx.destination);
+        noise.start(now);
+        noise.stop(now + 1.25);
+        break;
+      }
+      case 'laser': {
+        const osc = ctx.createOscillator();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(1800, now);
+        osc.frequency.exponentialRampToValueAtTime(80, now + 0.35);
+        const g = envGain(ctx, now, 0.002, 0.35, peak * 0.4);
+        osc.connect(g).connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.4);
+
+        const sub = ctx.createOscillator();
+        sub.type = 'sawtooth';
+        sub.frequency.setValueAtTime(900, now);
+        sub.frequency.exponentialRampToValueAtTime(40, now + 0.35);
+        const sg = envGain(ctx, now, 0.002, 0.35, peak * 0.3);
+        sub.connect(sg).connect(ctx.destination);
+        sub.start(now);
+        sub.stop(now + 0.4);
+        break;
+      }
+      case 'glitch': {
+        for (let i = 0; i < 6; i++) {
+          const t = now + i * 0.04;
+          const osc = ctx.createOscillator();
+          osc.type = 'square';
+          osc.frequency.value = 200 + Math.random() * 1400;
+          const g = envGain(ctx, t, 0.001, 0.04, peak * 0.5);
+          osc.connect(g).connect(ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.06);
+        }
+        const noise = ctx.createBufferSource();
+        noise.buffer = makeNoiseBuffer(ctx, 0.25);
+        const bp = ctx.createBiquadFilter();
+        bp.type = 'bandpass';
+        bp.frequency.value = 3000;
+        const ng = envGain(ctx, now, 0.001, 0.22, peak * 0.6);
+        noise.connect(bp).connect(ng).connect(ctx.destination);
+        noise.start(now);
+        noise.stop(now + 0.28);
+        break;
+      }
+      case 'robot': {
+        const osc = ctx.createOscillator();
+        osc.type = 'square';
+        osc.frequency.value = 180;
+        const lfo = ctx.createOscillator();
+        lfo.type = 'sine';
+        lfo.frequency.value = 22;
+        const lfoGain = ctx.createGain();
+        lfoGain.gain.value = 60;
+        lfo.connect(lfoGain).connect(osc.frequency);
+
+        const g = envGain(ctx, now, 0.005, 0.5, peak * 0.35);
+        osc.connect(g).connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.55);
+        lfo.start(now);
+        lfo.stop(now + 0.55);
+        break;
+      }
+      case 'pluck': {
+        const osc = ctx.createOscillator();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(880, now);
+        osc.frequency.exponentialRampToValueAtTime(440, now + 0.08);
+        const g = envGain(ctx, now, 0.001, 0.25, peak * 0.7);
+        osc.connect(g).connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.3);
+
+        const harm = ctx.createOscillator();
+        harm.type = 'sine';
+        harm.frequency.setValueAtTime(1760, now);
+        harm.frequency.exponentialRampToValueAtTime(880, now + 0.08);
+        const hg = envGain(ctx, now, 0.001, 0.15, peak * 0.25);
+        harm.connect(hg).connect(ctx.destination);
+        harm.start(now);
+        harm.stop(now + 0.2);
+        break;
+      }
+      case 'cosmic': {
+        const o1 = ctx.createOscillator();
+        o1.type = 'sawtooth';
+        o1.frequency.value = 110;
+        o1.detune.value = -8;
+        const o2 = ctx.createOscillator();
+        o2.type = 'sawtooth';
+        o2.frequency.value = 110;
+        o2.detune.value = 8;
+        const o3 = ctx.createOscillator();
+        o3.type = 'sine';
+        o3.frequency.value = 220;
+
+        const lp = ctx.createBiquadFilter();
+        lp.type = 'lowpass';
+        lp.frequency.value = 900;
+        lp.Q.value = 6;
+
+        const lfo = ctx.createOscillator();
+        lfo.type = 'sine';
+        lfo.frequency.value = 0.4;
+        const lfoGain = ctx.createGain();
+        lfoGain.gain.value = 500;
+        lfo.connect(lfoGain).connect(lp.frequency);
+
+        const master = ctx.createGain();
+        master.gain.setValueAtTime(0, now);
+        master.gain.linearRampToValueAtTime(peak * 0.5, now + 0.4);
+        master.gain.linearRampToValueAtTime(peak * 0.3, now + 1.5);
+        master.gain.exponentialRampToValueAtTime(0.0001, now + 3.5);
+
+        o1.connect(lp);
+        o2.connect(lp);
+        o3.connect(lp);
+        lp.connect(master).connect(ctx.destination);
+
+        o1.start(now); o2.start(now); o3.start(now);
+        lfo.start(now);
+        o1.stop(now + 3.6); o2.stop(now + 3.6); o3.stop(now + 3.6);
+        lfo.stop(now + 3.6);
+        break;
+      }
+    }
+  }
+
   function getAccent() {
     if (accentClass.includes('amber')) return { r: 251, g: 191, b: 36 };
     if (accentClass.includes('cyan')) return { r: 34, g: 211, b: 238 };
     if (accentClass.includes('rose')) return { r: 251, g: 113, b: 133 };
+    if (accentClass.includes('violet') || accentClass.includes('fuchsia'))
+      return { r: 167, g: 139, b: 250 };
     return { r: 34, g: 211, b: 238 };
   }
 
@@ -350,6 +557,7 @@
   function trigger() {
     if (!power) return;
     if (sound.note !== undefined) playPiano(sound.note);
+    else if (sound.fx !== undefined) playSynthFx(sound.fx);
     else if (sound.synth !== undefined) playPercussion(sound.synth);
     else playSample();
 

@@ -58,6 +58,8 @@
     ? 'bg-amber-400'
     : banks[bankIndex].led.includes('cyan')
     ? 'bg-cyan-400'
+    : banks[bankIndex].led.includes('violet') || banks[bankIndex].led.includes('fuchsia')
+    ? 'bg-violet-400'
     : 'bg-rose-400';
 </script>
 
@@ -154,6 +156,7 @@
                   class:bg-amber-400={i === bankIndex && bank.accent.includes('amber')}
                   class:bg-cyan-400={i === bankIndex && bank.accent.includes('cyan')}
                   class:bg-rose-400={i === bankIndex && bank.accent.includes('rose')}
+                  class:bg-violet-400={i === bankIndex && (bank.accent.includes('violet') || bank.accent.includes('fuchsia'))}
                   class:shadow-dot-led={i === bankIndex}
                 ></span>
                 <span class="text-sm font-semibold text-white truncate">{bank.name}</span>
@@ -221,6 +224,9 @@
   :global(.shadow-led.bg-rose-400) {
     color: rgba(251, 113, 133, 0.9);
   }
+  :global(.shadow-led.bg-violet-400) {
+    color: rgba(167, 139, 250, 0.9);
+  }
   .shadow-power {
     box-shadow: 0 0 18px 2px rgba(16, 185, 129, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
   }
@@ -232,6 +238,9 @@
   }
   :global(.shadow-dot-led.bg-rose-400) {
     box-shadow: 0 0 8px 1px rgba(251, 113, 133, 0.7);
+  }
+  :global(.shadow-dot-led.bg-violet-400) {
+    box-shadow: 0 0 8px 1px rgba(167, 139, 250, 0.7);
   }
 
   @keyframes menu-open {
