@@ -624,7 +624,7 @@
   on:mouseleave={handleLeave}
   disabled={!power}
   aria-label={`${sound.id} (${sound.keyTrigger})`}
-  class="surprise-pad group relative aspect-square w-full rounded-2xl flex items-center justify-center bg-transparent border-0 p-0 cursor-pointer focus:outline-none"
+  class="surprise-pad drum-pad group relative aspect-square w-full rounded-2xl flex items-center justify-center bg-transparent border-0 p-0 cursor-pointer focus:outline-none"
   class:cursor-not-allowed={!power}
   class:opacity-40={!power}
 >
@@ -704,16 +704,16 @@
       class="absolute inset-0 w-full h-full pointer-events-none"
     ></canvas>
   </div>
-</button>
 
-{#if sound.url}
-  <audio
-    bind:this={audioEl}
-    preload="auto"
-    class="hidden"
-    src={sound.url}
-  ></audio>
-{/if}
+  {#if sound.url}
+    <audio
+      bind:this={audioEl}
+      preload="auto"
+      class="hidden"
+      src={sound.url}
+    ></audio>
+  {/if}
+</button>
 
 <style>
   .surprise-pad {
